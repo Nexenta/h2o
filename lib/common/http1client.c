@@ -80,7 +80,7 @@ static void close_client(struct st_h2o_http1client_private_t *client)
         h2o_buffer_dispose(&client->_body_buf);
     if (client->_body_buf_in_flight != NULL)
         h2o_buffer_dispose(&client->_body_buf_in_flight);
-    free(client);
+    je_free(client);
 }
 
 static void on_body_error(struct st_h2o_http1client_private_t *client, const char *errstr)

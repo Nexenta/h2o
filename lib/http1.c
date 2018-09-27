@@ -116,7 +116,7 @@ static void close_connection(struct st_h2o_http1_conn_t *conn, int close_socket)
     if (conn->sock != NULL && close_socket)
         h2o_socket_close(conn->sock);
     h2o_linklist_unlink(&conn->_conns);
-    free(conn);
+    je_free(conn);
 }
 
 static void set_timeout(struct st_h2o_http1_conn_t *conn, h2o_timeout_t *timeout, h2o_timeout_cb cb)

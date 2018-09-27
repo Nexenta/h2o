@@ -50,7 +50,7 @@ static void *alloc_cb(void *_unused, unsigned int cnt, unsigned int sz)
 
 static void free_cb(void *_unused, void *p)
 {
-    free(p);
+    je_free(p);
 }
 
 static void expand_buf(iovec_vector_t *bufs)
@@ -150,8 +150,8 @@ static void do_free(void *_self)
     }
 
     for (i = 0; i != self->bufs.size; ++i)
-        free(self->bufs.entries[i].base);
-    free(self->bufs.entries);
+        je_free(self->bufs.entries[i].base);
+    je_free(self->bufs.entries);
 }
 
 static struct st_gzip_context_t *gzip_open(h2o_mem_pool_t *pool)

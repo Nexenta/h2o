@@ -319,15 +319,15 @@ static void destroy_ssl(struct st_h2o_socket_ssl_t *ssl)
 #endif
     if (ssl->ossl != NULL) {
         if (!SSL_is_server(ssl->ossl)) {
-            free(ssl->handshake.client.server_name);
-            free(ssl->handshake.client.session_cache_key.base);
+            je_free(ssl->handshake.client.server_name);
+            je_free(ssl->handshake.client.session_cache_key.base);
         }
         SSL_free(ssl->ossl);
         ssl->ossl = NULL;
     }
     h2o_buffer_dispose(&ssl->input.encrypted);
     clear_output_buffer(ssl);
-    free(ssl);
+    je_free(ssl);
 }
 
 static void dispose_socket(h2o_socket_t *sock, const char *err)
@@ -341,7 +341,7 @@ static void dispose_socket(h2o_socket_t *sock, const char *err)
     }
     h2o_buffer_dispose(&sock->input);
     if (sock->_peername != NULL) {
-        free(sock->_peername);
+        je_free(sock->_peername);
         sock->_peername = NULL;
     }
 
@@ -728,7 +728,7 @@ void h2o_socket_read_stop(h2o_socket_t *sock)
 void h2o_socket_setpeername(h2o_socket_t *sock, struct sockaddr *sa, socklen_t len)
 {
     if (sock->_peername != NULL)
-        free(sock->_peername);
+        je_free(sock->_peername);
     sock->_peername = h2o_mem_alloc(offsetof(struct st_h2o_socket_peername_t, addr) + len);
     sock->_peername->len = len;
     memcpy(&sock->_peername->addr, sa, len);

@@ -40,7 +40,7 @@ static void expand_buf(struct st_brotli_context_t *self)
 static void shrink_buf(struct st_brotli_context_t *self, size_t new_size)
 {
     while (new_size < self->bufs.size)
-        free(self->bufs.entries[--self->bufs.size].base);
+        je_free(self->bufs.entries[--self->bufs.size].base);
 }
 
 static void compress_core(struct st_brotli_context_t *self, BrotliEncoderOperation op, const uint8_t **src, size_t *srclen)
@@ -103,7 +103,7 @@ static void on_dispose(void *_self)
 
     BrotliEncoderDestroyInstance(self->state);
     shrink_buf(self, 0);
-    free(self->bufs.entries);
+    je_free(self->bufs.entries);
 }
 
 h2o_compress_context_t *h2o_compress_brotli_open(h2o_mem_pool_t *pool, int quality, size_t estimated_content_length,

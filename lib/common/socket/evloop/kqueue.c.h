@@ -69,7 +69,7 @@ static int collect_status(struct st_h2o_socket_loop_kqueue_t *loop, struct keven
         sock->_next_statechanged = sock;
         /* update the state */
         if ((sock->_flags & H2O_SOCKET_FLAG_IS_DISPOSED) != 0) {
-            free(sock);
+            je_free(sock);
         } else {
             if (h2o_socket_is_reading(&sock->super)) {
                 if ((sock->_flags & H2O_SOCKET_FLAG_IS_POLLED_FOR_READ) == 0) {

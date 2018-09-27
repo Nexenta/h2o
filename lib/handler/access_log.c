@@ -57,7 +57,7 @@ static void log_access(h2o_logger_t *_self, h2o_req_t *req)
 
     /* free memory */
     if (logline != buf)
-        free(logline);
+        je_free(logline);
 }
 
 static void on_dispose_handle(void *_fh)

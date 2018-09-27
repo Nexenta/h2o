@@ -179,7 +179,7 @@ h2o_logconf_t *h2o_logconf_compile(const char *fmt, int escape, char *errbuf)
                     h2o_iovec_t name = strdup_lowercased(pt, quote_end - pt);
                     token = h2o_lookup_token(name.base, name.len);
                     if (token != NULL) {
-                        free(name.base);
+                        je_free(name.base);
                         if (modifier == 'o' && token == H2O_TOKEN_SET_COOKIE) {
                             NEW_ELEMENT(ELEMENT_TYPE_OUT_HEADER_TOKEN_CONCATENATED);
                             LAST_ELEMENT()->data.header_token = token;
@@ -340,20 +340,20 @@ void h2o_logconf_dispose(h2o_logconf_t *logconf)
     size_t i;
 
     for (i = 0; i != logconf->elements.size; ++i) {
-        free(logconf->elements.entries[i].suffix.base);
+        je_free(logconf->elements.entries[i].suffix.base);
         switch (logconf->elements.entries[i].type) {
         case ELEMENT_TYPE_EXTENDED_VAR:
         case ELEMENT_TYPE_IN_HEADER_STRING:
         case ELEMENT_TYPE_OUT_HEADER_STRING:
         case ELEMENT_TYPE_TIMESTAMP_STRFTIME:
-            free(logconf->elements.entries[i].data.name.base);
+            je_free(logconf->elements.entries[i].data.name.base);
             break;
         default:
             break;
         }
     }
-    free(logconf->elements.entries);
-    free(logconf);
+    je_free(logconf->elements.entries);
+    je_free(logconf);
 }
 
 static inline char *append_safe_string(char *pos, const char *src, size_t len)

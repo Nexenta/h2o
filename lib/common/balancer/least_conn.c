@@ -58,7 +58,7 @@ static void destroy(h2o_balancer_t *_self)
 {
     struct least_conn_t *self = (void *)_self;
     pthread_mutex_destroy(&self->mutex);
-    free(self);
+    je_free(self);
 }
 
 h2o_balancer_t *h2o_balancer_create_lc(void)

@@ -826,7 +826,7 @@ static void on_context_dispose(h2o_handler_t *_handler, h2o_context_t *ctx)
 
     h2o_socketpool_unregister_loop(&handler->sockpool, ctx->loop);
     h2o_timeout_dispose(ctx->loop, &handler_ctx->io_timeout);
-    free(handler_ctx);
+    je_free(handler_ctx);
 }
 
 static void on_handler_dispose(h2o_handler_t *_handler)
@@ -837,7 +837,7 @@ static void on_handler_dispose(h2o_handler_t *_handler)
         handler->config.callbacks.dispose(handler, handler->config.callbacks.data);
 
     h2o_socketpool_dispose(&handler->sockpool);
-    free(handler->config.document_root.base);
+    je_free(handler->config.document_root.base);
 }
 
 h2o_fastcgi_handler_t *h2o_fastcgi_register(h2o_pathconf_t *pathconf, h2o_url_t *upstream, h2o_fastcgi_config_vars_t *vars)

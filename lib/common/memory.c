@@ -92,7 +92,7 @@ void h2o_mem_free_recycle(h2o_mem_recycle_t *allocator, void *p)
 {
     struct st_h2o_mem_recycle_chunk_t *chunk;
     if (allocator->cnt == allocator->max) {
-        free(p);
+        je_free(p);
         return;
     }
     /* register the pointer to the pool */
@@ -109,7 +109,7 @@ void h2o_mem_clear_recycle(h2o_mem_recycle_t *allocator)
     while (allocator->cnt-- > 0) {
         chunk = allocator->_link;
         allocator->_link = allocator->_link->next;
-        free(chunk);
+        je_free(chunk);
     }
 }
 
@@ -136,7 +136,7 @@ void h2o_mem_clear_pool(h2o_mem_pool_t *pool)
         struct st_h2o_mem_pool_direct_t *direct = pool->directs, *next;
         do {
             next = direct->next;
-            free(direct);
+            je_free(direct);
         } while ((direct = next) != NULL);
         pool->directs = NULL;
     }
@@ -220,7 +220,7 @@ void h2o_buffer__do_free(h2o_buffer_t *buffer)
         close(buffer->_fd);
         munmap((void *)buffer, topagesize(buffer->capacity));
     } else {
-        free(buffer);
+        je_free(buffer);
     }
 }
 

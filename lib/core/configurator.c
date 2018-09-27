@@ -64,7 +64,7 @@ static void destroy_context(h2o_configurator_context_t *ctx)
         else
             h2o_mem_release_shared(ctx->env);
     }
-    free(ctx);
+    je_free(ctx);
 }
 
 static int on_core_enter(h2o_configurator_t *_self, h2o_configurator_context_t *ctx, yoml_t *node)
@@ -98,8 +98,8 @@ static void destroy_configurator(h2o_configurator_t *configurator)
 {
     if (configurator->dispose != NULL)
         configurator->dispose(configurator);
-    free(configurator->commands.entries);
-    free(configurator);
+    je_free(configurator->commands.entries);
+    je_free(configurator);
 }
 
 static int setup_configurators(h2o_configurator_context_t *ctx, int is_enter, yoml_t *node)
@@ -232,8 +232,8 @@ int h2o_configurator_apply_commands(h2o_configurator_context_t *ctx, yoml_t *nod
 
     ret = 0;
 Exit:
-    free(deferred.entries);
-    free(semi_deferred.entries);
+    je_free(deferred.entries);
+    je_free(semi_deferred.entries);
     return ret;
 }
 

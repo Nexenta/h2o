@@ -71,7 +71,7 @@ void h2o_http2_stream_close(h2o_http2_conn_t *conn, h2o_http2_stream_t *stream)
     h2o_dispose_request(&stream->req);
     if (stream->stream_id == 1 && conn->_http1_req_input != NULL)
         h2o_buffer_dispose(&conn->_http1_req_input);
-    free(stream);
+    je_free(stream);
 }
 
 void h2o_http2_stream_reset(h2o_http2_conn_t *conn, h2o_http2_stream_t *stream)

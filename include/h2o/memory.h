@@ -31,6 +31,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef USE_JE_MALLOC
+#include <jemalloc/jemalloc.h>
+#else
+#define je_free		free
+#define je_malloc	malloc
+#define je_calloc	calloc
+#define je_realloc	realloc
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -343,9 +352,14 @@ inline h2o_iovec_t h2o_iovec_init(const void *base, size_t len)
     return buf;
 }
 
+static inline void h2o_mem_free(void *mp)
+{
+	je_free(mp);
+}
+
 inline void *h2o_mem_alloc(size_t sz)
 {
-    void *p = malloc(sz);
+    void *p = je_malloc(sz);
     if (p == NULL)
         h2o_fatal("no memory");
     return p;
@@ -353,7 +367,7 @@ inline void *h2o_mem_alloc(size_t sz)
 
 inline void *h2o_mem_realloc(void *oldp, size_t sz)
 {
-    void *newp = realloc(oldp, sz);
+    void *newp = je_realloc(oldp, sz);
     if (newp == NULL) {
         h2o_fatal("no memory");
         return oldp;
@@ -382,7 +396,7 @@ inline int h2o_mem_release_shared(void *p)
     if (--entry->refcnt == 0) {
         if (entry->dispose != NULL)
             entry->dispose(entry->bytes);
-        free(entry);
+        je_free(entry);
         return 1;
     }
     return 0;

@@ -46,17 +46,17 @@ static void destroy_hostconf(h2o_hostconf_t *hostconf)
     size_t i;
 
     if (hostconf->authority.hostport.base != hostconf->authority.host.base)
-        free(hostconf->authority.hostport.base);
-    free(hostconf->authority.host.base);
+        je_free(hostconf->authority.hostport.base);
+    je_free(hostconf->authority.host.base);
     for (i = 0; i != hostconf->paths.size; ++i) {
         h2o_pathconf_t *pathconf = hostconf->paths.entries + i;
         h2o_config_dispose_pathconf(pathconf);
     }
-    free(hostconf->paths.entries);
+    je_free(hostconf->paths.entries);
     h2o_config_dispose_pathconf(&hostconf->fallback_path);
     h2o_mem_release_shared(hostconf->mimemap);
 
-    free(hostconf);
+    je_free(hostconf);
 }
 
 static void on_dispose_envconf(void *_envconf)
@@ -69,10 +69,10 @@ static void on_dispose_envconf(void *_envconf)
 
     for (i = 0; i != envconf->unsets.size; ++i)
         h2o_mem_release_shared(envconf->unsets.entries[i].base);
-    free(envconf->unsets.entries);
+    je_free(envconf->unsets.entries);
     for (i = 0; i != envconf->sets.size; ++i)
         h2o_mem_release_shared(envconf->sets.entries[i].base);
-    free(envconf->sets.entries);
+    je_free(envconf->sets.entries);
 }
 
 h2o_envconf_t *h2o_config_create_envconf(h2o_envconf_t *parent)
@@ -150,16 +150,16 @@ void h2o_config_dispose_pathconf(h2o_pathconf_t *pathconf)
             type *e = list.entries[i];                                                                                             \
             if (e->dispose != NULL)                                                                                                \
                 e->dispose(e);                                                                                                     \
-            free(e);                                                                                                               \
+            je_free(e);                                                                                                               \
         }                                                                                                                          \
-        free(list.entries);                                                                                                        \
+        je_free(list.entries);                                                                                                        \
     } while (0)
     DESTROY_LIST(h2o_handler_t, pathconf->handlers);
     DESTROY_LIST(h2o_filter_t, pathconf->filters);
     DESTROY_LIST(h2o_logger_t, pathconf->loggers);
 #undef DESTROY_LIST
 
-    free(pathconf->path.base);
+    je_free(pathconf->path.base);
     if (pathconf->mimemap != NULL)
         h2o_mem_release_shared(pathconf->mimemap);
     if (pathconf->env != NULL)
@@ -270,7 +270,7 @@ h2o_hostconf_t *h2o_config_register_host(h2o_globalconf_t *config, h2o_iovec_t h
     h2o_append_to_null_terminated_list((void *)&config->hosts, hostconf);
 
 Exit:
-    free(host_lc.base);
+    je_free(host_lc.base);
     return hostconf;
 }
 
@@ -282,7 +282,7 @@ void h2o_config_dispose(h2o_globalconf_t *config)
         h2o_hostconf_t *hostconf = config->hosts[i];
         destroy_hostconf(hostconf);
     }
-    free(config->hosts);
+    je_free(config->hosts);
 
     h2o_socketpool_dispose(&config->proxy.global_socketpool);
     h2o_mem_release_shared(config->mimemap);

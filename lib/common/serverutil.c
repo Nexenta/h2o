@@ -115,7 +115,7 @@ size_t h2o_server_starter_get_fds(int **_fds)
     *_fds = fds.entries;
     return fds.size;
 Error:
-    free(fds.entries);
+    je_free(fds.entries);
     return SIZE_MAX;
 }
 
@@ -229,7 +229,7 @@ Error:
     errno = posix_spawnp(&pid, cmd, &file_actions, NULL, argv, env != NULL ? env : environ);
     if (!cloexec_mutex_is_locked)
         pthread_mutex_unlock(&cloexec_mutex);
-    free(env);
+    je_free(env);
     if (errno != 0)
         return -1;
 

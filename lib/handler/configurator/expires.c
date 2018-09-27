@@ -38,7 +38,7 @@ static int on_config_expires(h2o_configurator_command_t *cmd, h2o_configurator_c
     char unit[32];
 
     if (strcasecmp(node->data.scalar, "OFF") == 0) {
-        free(*self->args);
+        je_free(*self->args);
         *self->args = NULL;
     } else if (sscanf(node->data.scalar, "%" SCNu64 " %31s", &value, unit) == 2) {
         /* convert value to seconds depending on the unit */
@@ -100,7 +100,7 @@ static int on_config_exit(h2o_configurator_t *_self, h2o_configurator_context_t 
         }
         /* destruct */
         assert((*self->args)->mode == H2O_EXPIRES_MODE_MAX_AGE);
-        free(*self->args);
+        je_free(*self->args);
         *self->args = NULL;
     }
 

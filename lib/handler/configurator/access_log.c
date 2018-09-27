@@ -106,7 +106,7 @@ static int on_config_exit(h2o_configurator_t *_self, h2o_configurator_context_t 
         h2o_mem_release_shared(fh);
     }
     /* free the vector */
-    free(self->handles->entries);
+    je_free(self->handles->entries);
 
     /* pop the stack pointer */
     --self->handles;

@@ -152,7 +152,7 @@ static void wreq_free_buffer_if_allocated(struct st_h2o_evloop_socket_t *sock)
         sock->_wreq.bufs <= sock->_wreq.smallbufs + sizeof(sock->_wreq.smallbufs) / sizeof(sock->_wreq.smallbufs[0])) {
         /* no need to free */
     } else {
-        free(sock->_wreq.alloced_ptr);
+        je_free(sock->_wreq.alloced_ptr);
         sock->_wreq.bufs = sock->_wreq.smallbufs;
     }
 }
@@ -582,14 +582,14 @@ void h2o_evloop_destroy(h2o_evloop_t *loop)
      */
     while ((sock = loop->_statechanged.head) != NULL) {
         loop->_statechanged.head = sock->_next_statechanged;
-        free(sock);
+        je_free(sock);
     }
 
     /* dispose backend-specific data */
     evloop_do_dispose(loop);
 
     /* lastly we need to free loop memory */
-    free(loop);
+    je_free(loop);
 }
 
 int h2o_evloop_run(h2o_evloop_t *loop, int32_t max_wait)

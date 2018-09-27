@@ -414,7 +414,7 @@ static void dispose_shared_context(void *data)
         return;
     h2o_mruby_shared_context_t *shared_ctx = (h2o_mruby_shared_context_t *)data;
     mrb_close(shared_ctx->mrb);
-    free(shared_ctx);
+    je_free(shared_ctx);
 }
 
 static h2o_mruby_shared_context_t *get_shared_context(h2o_context_t *ctx)
@@ -488,16 +488,16 @@ static void on_context_dispose(h2o_handler_t *_handler, h2o_context_t *ctx)
     if (handler_ctx == NULL)
         return;
 
-    free(handler_ctx);
+    je_free(handler_ctx);
 }
 
 static void on_handler_dispose(h2o_handler_t *_handler)
 {
     h2o_mruby_handler_t *handler = (void *)_handler;
 
-    free(handler->config.source.base);
-    free(handler->config.path);
-    free(handler);
+    je_free(handler->config.source.base);
+    je_free(handler->config.path);
+    je_free(handler);
 }
 
 static void stringify_address(h2o_conn_t *conn, socklen_t (*cb)(h2o_conn_t *conn, struct sockaddr *), mrb_state *mrb,

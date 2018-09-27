@@ -100,7 +100,7 @@ static h2o_iovec_t events_status_final(void *priv, h2o_globalconf_t *gconf, h2o_
                        H2_AGG_ERR(REFUSED_STREAM), H2_AGG_ERR(CANCEL), H2_AGG_ERR(COMPRESSION), H2_AGG_ERR(CONNECT),
                        H2_AGG_ERR(ENHANCE_YOUR_CALM), H2_AGG_ERR(INADEQUATE_SECURITY), esc->h2_read_closed, esc->h2_write_closed);
     pthread_mutex_destroy(&esc->mutex);
-    free(esc);
+    je_free(esc);
     return ret;
 #undef BUFSIZE
 #undef H1_AGG_ERR

@@ -166,7 +166,7 @@ void h2o_hostinfo_getaddr_cancel(h2o_hostinfo_getaddr_req_t *req)
     pthread_mutex_unlock(&queue.mutex);
 
     if (should_free)
-        free(req);
+        je_free(req);
 }
 
 void h2o_hostinfo_getaddr_receiver(h2o_multithread_receiver_t *receiver, h2o_linklist_t *messages)
@@ -181,7 +181,7 @@ void h2o_hostinfo_getaddr_receiver(h2o_multithread_receiver_t *receiver, h2o_lin
         }
         if (req->_out.ai != NULL)
             freeaddrinfo(req->_out.ai);
-        free(req);
+        je_free(req);
     }
 }
 

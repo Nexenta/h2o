@@ -124,7 +124,7 @@ static void free_sock(uv_handle_t *handle)
 {
     struct st_h2o_uv_socket_t *sock = handle->data;
     uv_close_cb cb = sock->close_cb;
-    free(sock);
+    je_free(sock);
     cb(handle);
 }
 
@@ -212,7 +212,7 @@ static struct st_h2o_uv_socket_t *create_socket(h2o_loop_t *loop)
     uv_tcp_t *tcp = h2o_mem_alloc(sizeof(*tcp));
 
     if (uv_tcp_init(loop, tcp) != 0) {
-        free(tcp);
+        je_free(tcp);
         return NULL;
     }
     return (void *)h2o_uv_socket_create((void *)tcp, (uv_close_cb)free);
@@ -254,7 +254,7 @@ h2o_socket_t *h2o_uv__poll_create(h2o_loop_t *loop, int fd, uv_close_cb close_cb
 {
     uv_poll_t *poll = h2o_mem_alloc(sizeof(*poll));
     if (uv_poll_init(loop, poll, fd) != 0) {
-        free(poll);
+        je_free(poll);
         return NULL;
     }
     return h2o_uv_socket_create((uv_handle_t *)poll, close_cb);

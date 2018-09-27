@@ -68,7 +68,7 @@ static void on_getaddr(h2o_hostinfo_getaddr_req_t *getaddr_req, const char *errs
 static void destroy_detached(struct pool_entry_t *entry)
 {
     h2o_socket_dispose_export(&entry->sockinfo);
-    free(entry);
+    je_free(entry);
 }
 
 static void destroy_attached(struct pool_entry_t *entry)
@@ -208,15 +208,15 @@ void h2o_socketpool_destroy_target(h2o_socketpool_target_t *target)
 {
     switch (target->type) {
     case H2O_SOCKETPOOL_TYPE_NAMED:
-        free(target->peer.named_serv.base);
+        je_free(target->peer.named_serv.base);
         break;
     case H2O_SOCKETPOOL_TYPE_SOCKADDR:
         break;
     }
-    free(target->url.authority.base);
-    free(target->url.host.base);
-    free(target->url.path.base);
-    free(target);
+    je_free(target->url.authority.base);
+    je_free(target->url.host.base);
+    je_free(target->url.path.base);
+    je_free(target);
 }
 
 void h2o_socketpool_dispose(h2o_socketpool_t *pool)
@@ -245,7 +245,7 @@ void h2o_socketpool_dispose(h2o_socketpool_t *pool)
     for (i = 0; i < pool->targets.size; i++) {
         h2o_socketpool_destroy_target(pool->targets.entries[i]);
     }
-    free(pool->targets.entries);
+    je_free(pool->targets.entries);
 }
 
 void h2o_socketpool_set_ssl_ctx(h2o_socketpool_t *pool, SSL_CTX *ssl_ctx)
@@ -285,10 +285,10 @@ static void call_connect_cb(h2o_socketpool_connect_request_t *req, const char *e
     h2o_socketpool_target_t *selected_target = req->pool->targets.entries[req->selected_target];
 
     if (req->lb.tried != NULL) {
-        free(req->lb.tried);
+        je_free(req->lb.tried);
     }
 
-    free(req);
+    je_free(req);
     cb(sock, errstr, data, &selected_target->url);
 }
 
@@ -373,7 +373,7 @@ static void on_close(void *data)
     struct on_close_data_t *close_data = data;
     h2o_socketpool_t *pool = close_data->pool;
     __sync_sub_and_fetch(&pool->targets.entries[close_data->target]->_shared.leased_count, 1);
-    free(close_data);
+    je_free(close_data);
     __sync_sub_and_fetch(&pool->_shared.count, 1);
 }
 
@@ -486,7 +486,7 @@ void h2o_socketpool_connect(h2o_socketpool_connect_request_t **_req, h2o_socketp
             /* yes! return it */
             size_t entry_target = entry->target;
             h2o_socket_t *sock = h2o_socket_import(loop, &entry->sockinfo);
-            free(entry);
+            je_free(entry);
             close_data = h2o_mem_alloc(sizeof(*close_data));
             close_data->pool = pool;
             close_data->target = entry_target;
@@ -542,8 +542,8 @@ void h2o_socketpool_cancel_connect(h2o_socketpool_connect_request_t *req)
     if (req->sock != NULL)
         h2o_socket_close(req->sock);
     if (req->lb.tried != NULL)
-        free(req->lb.tried);
-    free(req);
+        je_free(req->lb.tried);
+    je_free(req);
 }
 
 int h2o_socketpool_return(h2o_socketpool_t *pool, h2o_socket_t *sock)
@@ -557,13 +557,13 @@ int h2o_socketpool_return(h2o_socketpool_t *pool, h2o_socket_t *sock)
     /* reset the on_close callback */
     assert(close_data->pool == pool);
     __sync_sub_and_fetch(&pool->targets.entries[close_data->target]->_shared.leased_count, 1);
-    free(close_data);
+    je_free(close_data);
     sock->on_close.cb = NULL;
     sock->on_close.data = NULL;
 
     entry = h2o_mem_alloc(sizeof(*entry));
     if (h2o_socket_export(sock, &entry->sockinfo) != 0) {
-        free(entry);
+        je_free(entry);
         __sync_sub_and_fetch(&pool->_shared.count, 1);
         return -1;
     }

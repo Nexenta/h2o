@@ -131,7 +131,7 @@ static int on_config_connect(h2o_configurator_command_t *cmd, h2o_configurator_c
     }
 
     h2o_fastcgi_register(ctx->pathconf, &upstream, self->vars);
-    free(upstream.authority.base);
+    je_free(upstream.authority.base);
 
     return 0;
 }
@@ -307,14 +307,14 @@ static int on_config_spawn(h2o_configurator_command_t *cmd, h2o_configurator_con
     h2o_url_init_with_sun_path(&upstream, NULL, &H2O_URL_SCHEME_FASTCGI, h2o_iovec_init(sa.sun_path, strlen(sa.sun_path)),
                                h2o_iovec_init(H2O_STRLIT("/")));
     h2o_fastcgi_register(ctx->pathconf, &upstream, &config_vars);
-    free(upstream.authority.base);
+    je_free(upstream.authority.base);
 
     ret = 0;
 Exit:
     if (dirname[0] != '\0')
         unlink(dirname);
-    free(kill_on_close_cmd_path);
-    free(setuidgid_cmd_path);
+    je_free(kill_on_close_cmd_path);
+    je_free(setuidgid_cmd_path);
     return ret;
 }
 

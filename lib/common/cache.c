@@ -134,7 +134,7 @@ void h2o_cache_destroy(h2o_cache_t *cache)
     kh_destroy(cache, cache->table);
     if ((cache->flags & H2O_CACHE_FLAG_MULTITHREADED) != 0)
         pthread_mutex_destroy(&cache->mutex);
-    free(cache);
+    je_free(cache);
 }
 
 void h2o_cache_clear(h2o_cache_t *cache)
@@ -200,8 +200,8 @@ void h2o_cache_release(h2o_cache_t *cache, h2o_cache_ref_t *ref)
         assert(!h2o_linklist_is_linked(&ref->_age_link));
         if (cache->destroy_cb != NULL)
             cache->destroy_cb(ref->value);
-        free(ref->key.base);
-        free(ref);
+        je_free(ref->key.base);
+        je_free(ref);
     }
 }
 

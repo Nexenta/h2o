@@ -58,7 +58,7 @@ static void free_write_buf(h2o_websocket_conn_t *conn)
 {
     size_t i;
     for (i = 0; i < conn->_write_buf.cnt; ++i)
-        free(conn->_write_buf.bufs[i].base);
+        je_free(conn->_write_buf.bufs[i].base);
 }
 
 static void on_write_complete(h2o_socket_t *sock, const char *err)
@@ -208,7 +208,7 @@ void h2o_websocket_close(h2o_websocket_conn_t *conn)
         h2o_socket_close(conn->sock);
     free_write_buf(conn);
     wslay_event_context_free(conn->ws_ctx);
-    free(conn);
+    je_free(conn);
 }
 
 void h2o_websocket_proceed(h2o_websocket_conn_t *conn)

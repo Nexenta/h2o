@@ -44,7 +44,7 @@ static int update_status(struct st_h2o_evloop_epoll_t *loop)
         sock->_next_statechanged = sock;
         /* update the state */
         if ((sock->_flags & H2O_SOCKET_FLAG_IS_DISPOSED) != 0) {
-            free(sock);
+            je_free(sock);
         } else {
             int changed = 0, op, ret;
             struct epoll_event ev;

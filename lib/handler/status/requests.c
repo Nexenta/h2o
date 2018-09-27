@@ -50,7 +50,7 @@ static int collect_req_status(h2o_req_t *req, void *_cbdata)
     cbdata->buffer->size += len;
 
     if (logline != buf)
-        free(logline);
+        je_free(logline);
 
     return 0;
 }
@@ -139,10 +139,10 @@ static h2o_iovec_t requests_status_final(void *priv, h2o_globalconf_t *gconf, h2
                          h2o_iovec_init(H2O_STRLIT("\n ]")));
         h2o_logconf_dispose(rsc->logconf);
     }
-    free(rsc->req_data.base);
+    je_free(rsc->req_data.base);
     pthread_mutex_destroy(&rsc->mutex);
 
-    free(rsc);
+    je_free(rsc);
     return ret;
 }
 

@@ -95,9 +95,9 @@ static void dispose_context(h2o_mruby_http_request_context_t *ctx)
     h2o_buffer_dispose(&ctx->resp.after_closed);
 
     if (ctx->req.body.base != NULL)
-        free(ctx->req.body.base);
+        je_free(ctx->req.body.base);
 
-    free(ctx);
+    je_free(ctx);
 }
 
 static void on_gc_dispose_request(mrb_state *mrb, void *_ctx)

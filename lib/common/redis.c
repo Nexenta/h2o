@@ -115,7 +115,7 @@ static void on_command(redisAsyncContext *redis, void *reply, void *privdata)
     if (command->cb != NULL) {
         command->cb((redisReply *)reply, command->data);
     }
-    free(command);
+    je_free(command);
 }
 
 static void on_command_error_deferred(h2o_timeout_entry_t *entry)
@@ -157,7 +157,7 @@ void h2o_redis_free(h2o_redis_conn_t *conn)
         redisAsyncDisconnect(conn->_redis);
     }
     h2o_timeout_dispose(conn->loop, &conn->_defer_timeout);
-    free(conn);
+    je_free(conn);
 }
 
 /* redis socket adapter */
@@ -204,7 +204,7 @@ static void socket_cleanup(void *privdata)
     struct st_redis_socket_data_t *p = (struct st_redis_socket_data_t *)privdata;
     h2o_socket_close(p->socket);
     p->context->c.fd = -1; /* prevent hiredis from closing fd twice */
-    free(p);
+    je_free(p);
 }
 
 static void attach_loop(redisAsyncContext *ac, h2o_loop_t *loop)

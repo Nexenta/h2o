@@ -295,7 +295,7 @@ static struct st_h2o_hpack_header_table_entry_t *header_table_add(h2o_hpack_head
             } while (dst_index != table->num_entries);
         }
         memset(new_entries + table->num_entries, 0, sizeof(*new_entries) * (new_capacity - table->num_entries));
-        free(table->entries);
+        je_free(table->entries);
         table->entries = new_entries;
         table->entry_capacity = new_capacity;
         table->entry_start_index = 0;
@@ -480,7 +480,7 @@ void h2o_hpack_dispose_header_table(h2o_hpack_header_table_t *header_table)
             index = (index + 1) % header_table->entry_capacity;
         } while (--header_table->num_entries != 0);
     }
-    free(header_table->entries);
+    je_free(header_table->entries);
 }
 
 int h2o_hpack_parse_headers(h2o_req_t *req, h2o_hpack_header_table_t *header_table, const uint8_t *src, size_t len,

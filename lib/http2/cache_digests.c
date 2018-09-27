@@ -35,8 +35,8 @@ static void dispose_frame_vector(h2o_cache_digests_frame_vector_t *v)
 {
     size_t i;
     for (i = 0; i != v->size; ++i)
-        free(v->entries[i].keys.entries);
-    free(v->entries);
+        je_free(v->entries[i].keys.entries);
+    je_free(v->entries);
 }
 
 static void dispose_digests(h2o_cache_digests_t *digests)
@@ -48,7 +48,7 @@ static void dispose_digests(h2o_cache_digests_t *digests)
 void h2o_cache_digests_destroy(h2o_cache_digests_t *digests)
 {
     dispose_digests(digests);
-    free(digests);
+    je_free(digests);
 }
 
 static void load_digest(h2o_cache_digests_t **digests, const char *gcs_base64, size_t gcs_base64_len, int with_validators,
@@ -95,8 +95,8 @@ static void load_digest(h2o_cache_digests_t **digests, const char *gcs_base64, s
     (*digests)->fresh.complete = complete;
 
 Exit:
-    free(frame.keys.entries);
-    free(gcs_bin.base);
+    je_free(frame.keys.entries);
+    je_free(gcs_bin.base);
 }
 
 void h2o_cache_digests_load_header(h2o_cache_digests_t **digests, const char *value, size_t len)

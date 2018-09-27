@@ -390,7 +390,7 @@ static void on_websocket_upgrade_complete(void *_info, h2o_socket_t *sock, size_
     } else {
         h2o_socket_close(info->upstream_sock);
     }
-    free(info);
+    je_free(info);
 }
 
 static inline void on_websocket_upgrade(struct rp_generator_t *self, h2o_timeout_t *timeout, int rlen)

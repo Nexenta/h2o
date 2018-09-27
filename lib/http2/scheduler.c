@@ -229,7 +229,7 @@ void h2o_http2_scheduler_close(h2o_http2_scheduler_openref_t *ref)
         } while (!h2o_linklist_is_empty(&ref->node._all_refs));
     }
 
-    free(ref->node._queue);
+    je_free(ref->node._queue);
     ref->node._queue = NULL;
 
     /* detach self */
@@ -299,7 +299,7 @@ void h2o_http2_scheduler_init(h2o_http2_scheduler_node_t *root)
 
 void h2o_http2_scheduler_dispose(h2o_http2_scheduler_node_t *root)
 {
-    free(root->_queue);
+    je_free(root->_queue);
     root->_queue = NULL;
 }
 

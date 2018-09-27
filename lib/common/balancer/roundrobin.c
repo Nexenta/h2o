@@ -64,7 +64,7 @@ static void destroy(h2o_balancer_t *balancer)
 {
     struct round_robin_t *self = (void *)balancer;
     pthread_mutex_destroy(&self->mutex);
-    free(self);
+    je_free(self);
 }
 
 h2o_balancer_t *h2o_balancer_create_rr(void)

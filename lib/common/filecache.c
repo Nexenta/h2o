@@ -66,7 +66,7 @@ void h2o_filecache_destroy(h2o_filecache_t *cache)
     assert(kh_size(cache->hash) == 0);
     assert(h2o_linklist_is_empty(&cache->lru));
     kh_destroy(opencache_set, cache->hash);
-    free(cache);
+    je_free(cache);
 }
 
 void h2o_filecache_clear(h2o_filecache_t *cache)
@@ -145,7 +145,7 @@ void h2o_filecache_close_file(h2o_filecache_ref_t *ref)
         close(ref->fd);
         ref->fd = -1;
     }
-    free(ref);
+    je_free(ref);
 }
 
 struct tm *h2o_filecache_get_last_modified(h2o_filecache_ref_t *ref, char *outbuf)

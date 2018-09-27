@@ -63,9 +63,9 @@ h2o_http2_casper_t *h2o_http2_casper_create(unsigned capacity_bits, unsigned rem
 
 void h2o_http2_casper_destroy(h2o_http2_casper_t *casper)
 {
-    free(casper->keys.entries);
-    free(casper->cookie_cache.base);
-    free(casper);
+    je_free(casper->keys.entries);
+    je_free(casper->cookie_cache.base);
+    je_free(casper);
 }
 
 size_t h2o_http2_casper_num_entries(h2o_http2_casper_t *casper)
@@ -88,7 +88,7 @@ int h2o_http2_casper_lookup(h2o_http2_casper_t *casper, const char *path, size_t
         return 0;
 
     /* we need to set a new value */
-    free(casper->cookie_cache.base);
+    je_free(casper->cookie_cache.base);
     casper->cookie_cache = (h2o_iovec_t){NULL};
     h2o_vector_reserve(NULL, &casper->keys, casper->keys.size + 1);
     memmove(casper->keys.entries + i + 1, casper->keys.entries + i, (casper->keys.size - i) * sizeof(casper->keys.entries[0]));
@@ -115,7 +115,7 @@ void h2o_http2_casper_consume_cookie(h2o_http2_casper_t *casper, const char *coo
     size_t capacity = sizeof(tiny_keys_buf) / sizeof(tiny_keys_buf[0]), num_keys;
     while (num_keys = capacity, golombset_decode(casper->remainder_bits, binary.base, binary.len, keys, &num_keys) != 0) {
         if (keys != tiny_keys_buf) {
-            free(keys);
+            je_free(keys);
             keys = tiny_keys_buf; /* reset to something that would not trigger call to free(3) */
         }
         if (capacity >= (size_t)1 << casper->capacity_bits)
@@ -156,13 +156,13 @@ void h2o_http2_casper_consume_cookie(h2o_http2_casper_t *casper, const char *coo
                 casper->keys.entries[casper->keys.size++] = keys[new_index++];
             } while (new_index != num_keys);
         }
-        free(orig_keys);
+        je_free(orig_keys);
     }
 
 Exit:
     if (keys != tiny_keys_buf)
-        free(keys);
-    free(binary.base);
+        je_free(keys);
+    je_free(binary.base);
 }
 
 static size_t append_str(char *dst, const char *s, size_t l)
@@ -185,7 +185,7 @@ h2o_iovec_t h2o_http2_casper_get_cookie(h2o_http2_casper_t *casper)
     while (bin_size = bin_capacity,
            golombset_encode(casper->remainder_bits, casper->keys.entries, casper->keys.size, bin_buf, &bin_size) != 0) {
         if (bin_buf != tiny_bin_buf)
-            free(bin_buf);
+            je_free(bin_buf);
         bin_capacity *= 2;
         bin_buf = h2o_mem_alloc(bin_capacity);
     }
@@ -198,7 +198,7 @@ h2o_iovec_t h2o_http2_casper_get_cookie(h2o_http2_casper_t *casper)
     header_len += append_str(header_bytes + header_len, H2O_STRLIT(COOKIE_ATTRIBUTES));
 
     if (bin_buf != tiny_bin_buf)
-        free(bin_buf);
+        je_free(bin_buf);
 
     casper->cookie_cache = h2o_iovec_init(header_bytes, header_len);
     return casper->cookie_cache;

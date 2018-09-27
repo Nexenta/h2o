@@ -106,7 +106,7 @@ static struct st_h2o_accept_data_t *create_memcached_accept_data(h2o_accept_ctx_
 static void destroy_accept_data(struct st_h2o_accept_data_t *data)
 {
     h2o_timeout_unlink(&data->timeout);
-    free(data);
+    je_free(data);
 }
 
 static void destroy_default_accept_data(struct st_h2o_accept_data_t *_accept_data)
@@ -239,7 +239,7 @@ static void redis_resumption_on_get(redisReply *reply, void *_accept_data)
     h2o_socket_ssl_resume_server_handshake(accept_data->super.sock, session_data);
 
     if (session_data.base != NULL)
-        free(session_data.base);
+        je_free(session_data.base);
 }
 
 static void on_redis_resumption_get_failed(h2o_timeout_entry_t *timeout_entry)
@@ -259,7 +259,7 @@ static void redis_resumption_get(h2o_socket_t *sock, h2o_iovec_t session_id)
     if (conn->state == H2O_REDIS_CONNECTION_STATE_CONNECTED) {
         h2o_iovec_t key = build_redis_key(session_id, async_resumption_context.redis.prefix);
         accept_data->get_command = h2o_redis_command(conn, redis_resumption_on_get, accept_data, "GET %s", key.base);
-        free(key.base);
+        je_free(key.base);
     } else {
         if (conn->state == H2O_REDIS_CONNECTION_STATE_CLOSED) {
             // try to connect
@@ -286,8 +286,8 @@ static void redis_resumption_new(h2o_socket_t *sock, h2o_iovec_t session_id, h2o
     h2o_iovec_t key = build_redis_key(session_id, async_resumption_context.redis.prefix);
     h2o_iovec_t value = build_redis_value(session_data);
     h2o_redis_command(conn, NULL, NULL, "SETEX %s %d %s", key.base, async_resumption_context.expiration * 10, value.base);
-    free(key.base);
-    free(value.base);
+    je_free(key.base);
+    je_free(value.base);
 }
 
 void h2o_accept_setup_redis_ssl_resumption(const char *host, uint16_t port, unsigned expiration, const char *prefix)

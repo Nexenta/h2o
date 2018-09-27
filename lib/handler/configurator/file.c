@@ -55,7 +55,7 @@ static int on_config_index(h2o_configurator_command_t *cmd, h2o_configurator_con
     struct st_h2o_file_configurator_t *self = (void *)cmd->configurator;
     size_t i;
 
-    free(self->vars->index_files);
+    je_free(self->vars->index_files);
     self->vars->index_files = h2o_mem_alloc(sizeof(self->vars->index_files[0]) * (node->data.sequence.size + 1));
     for (i = 0; i != node->data.sequence.size; ++i) {
         yoml_t *element = node->data.sequence.elements[i];
@@ -154,7 +154,7 @@ static int on_config_enter(h2o_configurator_t *_self, h2o_configurator_context_t
 static int on_config_exit(h2o_configurator_t *_self, h2o_configurator_context_t *ctx, yoml_t *node)
 {
     struct st_h2o_file_configurator_t *self = (void *)_self;
-    free(self->vars->index_files);
+    je_free(self->vars->index_files);
     --self->vars;
     return 0;
 }

@@ -39,7 +39,7 @@ static void on_gc_dispose_channel(mrb_state *mrb, void *_ctx)
     struct st_h2o_mruby_channel_context_t *ctx = _ctx;
     assert(ctx != NULL); /* ctx can only be disposed by gc, so data binding has been never removed */
     mrb_gc_unregister(mrb, ctx->receivers);
-    free(ctx);
+    je_free(ctx);
 }
 
 const static struct mrb_data_type channel_type = {"channel", on_gc_dispose_channel};

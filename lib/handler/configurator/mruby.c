@@ -119,7 +119,7 @@ Exit:
     if (fp != NULL)
         fclose(fp);
     if (buf.base != NULL)
-        free(buf.base);
+        je_free(buf.base);
     return ret;
 }
 
@@ -144,7 +144,7 @@ static int on_config_exit(h2o_configurator_t *_self, h2o_configurator_context_t 
 
     /* free if the to-be-exitted frame level contains a different source */
     if (self->vars[-1].source.base != self->vars[0].source.base)
-        free(self->vars->source.base);
+        je_free(self->vars->source.base);
 
     --self->vars;
 

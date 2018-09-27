@@ -44,7 +44,7 @@ static void update_socks(struct st_h2o_evloop_poll_t *loop)
         /* update the state */
         if ((sock->_flags & H2O_SOCKET_FLAG_IS_DISPOSED) != 0) {
             assert(sock->fd == -1);
-            free(sock);
+            je_free(sock);
         } else {
             assert(sock->fd < loop->socks.size);
             if (loop->socks.entries[sock->fd] == NULL) {
@@ -138,7 +138,7 @@ int evloop_do_proceed(h2o_evloop_t *_loop, int32_t max_wait)
     }
 
 Exit:
-    free(pollfds.entries);
+    je_free(pollfds.entries);
     return ret;
 }
 

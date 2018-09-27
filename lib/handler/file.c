@@ -856,11 +856,11 @@ static void on_dispose(h2o_handler_t *_self)
     h2o_file_handler_t *self = (void *)_self;
     size_t i;
 
-    free(self->conf_path.base);
-    free(self->real_path.base);
+    je_free(self->conf_path.base);
+    je_free(self->real_path.base);
     h2o_mem_release_shared(self->mimemap);
     for (i = 0; self->index_files[i].base != NULL; ++i)
-        free(self->index_files[i].base);
+        je_free(self->index_files[i].base);
 }
 
 h2o_file_handler_t *h2o_file_register(h2o_pathconf_t *pathconf, const char *real_path, const char **index_files,
@@ -928,7 +928,7 @@ static void specific_handler_on_dispose(h2o_handler_t *_self)
 {
     struct st_h2o_specific_file_handler_t *self = (void *)_self;
 
-    free(self->real_path.base);
+    je_free(self->real_path.base);
     h2o_mem_release_shared(self->mime_type);
 }
 

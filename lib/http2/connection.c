@@ -335,7 +335,7 @@ static void close_connection_now(h2o_http2_conn_t *conn)
 
     if (conn->sock != NULL)
         h2o_socket_close(conn->sock);
-    free(conn);
+    je_free(conn);
 }
 
 int close_connection(h2o_http2_conn_t *conn)
@@ -1571,6 +1571,6 @@ int h2o_http2_handle_upgrade(h2o_req_t *req, struct timeval connected_at)
 Error:
     h2o_linklist_unlink(&http2conn->_conns);
     kh_destroy(h2o_http2_stream_t, http2conn->streams);
-    free(http2conn);
+    je_free(http2conn);
     return -1;
 }

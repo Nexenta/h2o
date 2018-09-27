@@ -36,7 +36,7 @@ static void on_deferred_timeout(h2o_timeout_entry_t *entry)
 {
     struct st_h2o_mruby_sleep_context_t *ctx = H2O_STRUCT_FROM_MEMBER(struct st_h2o_mruby_sleep_context_t, timeout_entry, entry);
     h2o_timeout_dispose(ctx->ctx->shared->ctx->loop, &ctx->timeout);
-    free(ctx);
+    je_free(ctx);
 }
 
 static void on_sleep_timeout(h2o_timeout_entry_t *entry)

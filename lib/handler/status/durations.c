@@ -133,7 +133,7 @@ static h2o_iovec_t durations_status_final(void *priv, h2o_globalconf_t *gconf, h
     duration_stats_free(&agg_stats->stats);
     pthread_mutex_destroy(&agg_stats->mutex);
 
-    free(agg_stats);
+    je_free(agg_stats);
     return ret;
 }
 

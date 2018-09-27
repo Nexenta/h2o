@@ -145,7 +145,7 @@ h2o_multithread_queue_t *h2o_multithread_create_queue(h2o_loop_t *loop)
 static void libuv_destroy_delayed(uv_handle_t *handle)
 {
     h2o_multithread_queue_t *queue = H2O_STRUCT_FROM_MEMBER(h2o_multithread_queue_t, async, (uv_async_t *)handle);
-    free(queue);
+    je_free(queue);
 }
 #endif
 
@@ -164,7 +164,7 @@ void h2o_multithread_destroy_queue(h2o_multithread_queue_t *queue)
     /* only one file descriptor is required for eventfd and already closed by h2o_socket_close() */
     close(queue->async.write);
 #endif
-    free(queue);
+    je_free(queue);
 #endif
 }
 

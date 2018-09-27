@@ -34,7 +34,7 @@ struct st_h2o_redirect_handler_t {
 static void on_dispose(h2o_handler_t *_self)
 {
     h2o_redirect_handler_t *self = (void *)_self;
-    free(self->prefix.base);
+    je_free(self->prefix.base);
 }
 
 static void redirect_internally(h2o_redirect_handler_t *self, h2o_req_t *req, h2o_iovec_t dest)

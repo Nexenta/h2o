@@ -41,7 +41,7 @@ static void close_connection(struct st_h2o_tunnel_t *tunnel)
     h2o_socket_close(tunnel->sock[0]);
     h2o_socket_close(tunnel->sock[1]);
 
-    free(tunnel);
+    je_free(tunnel);
 }
 
 static void on_timeout(h2o_timeout_entry_t *entry)

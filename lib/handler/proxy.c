@@ -102,7 +102,7 @@ static void on_context_dispose(h2o_handler_t *_self, h2o_context_t *ctx)
 #define FREE_TIMEOUT(to_)                                                                                                          \
     if (client_ctx->to_ != &ctx->proxy.to_) {                                                                                      \
         h2o_timeout_dispose(client_ctx->loop, client_ctx->to_);                                                                    \
-        free(client_ctx->to_);                                                                                                     \
+        je_free(client_ctx->to_);                                                                                                     \
     }
     FREE_TIMEOUT(io_timeout);
     FREE_TIMEOUT(connect_timeout);
@@ -111,10 +111,10 @@ static void on_context_dispose(h2o_handler_t *_self, h2o_context_t *ctx)
 
     if (client_ctx->websocket_timeout != NULL) {
         h2o_timeout_dispose(client_ctx->loop, client_ctx->websocket_timeout);
-        free(client_ctx->websocket_timeout);
+        je_free(client_ctx->websocket_timeout);
     }
     h2o_socketpool_unregister_loop(self->sockpool, ctx->loop);
-    free(client_ctx);
+    je_free(client_ctx);
 }
 
 static void on_handler_dispose(h2o_handler_t *_self)
@@ -122,7 +122,7 @@ static void on_handler_dispose(h2o_handler_t *_self)
     struct rp_handler_t *self = (void *)_self;
 
     h2o_socketpool_dispose(self->sockpool);
-    free(self->sockpool);
+    je_free(self->sockpool);
 }
 
 void h2o_proxy_register_reverse_proxy(h2o_pathconf_t *pathconf, h2o_proxy_config_vars_t *config, h2o_socketpool_t *sockpool)

@@ -429,7 +429,7 @@ static int on_config_enter(h2o_configurator_t *_self, h2o_configurator_context_t
         if (SSL_CTX_load_verify_locations(self->vars->ssl_ctx, ca_bundle, NULL) != 1)
             fprintf(stderr, "Warning: failed to load the default certificates file at %s. Proxying to HTTPS servers may fail.\n",
                     ca_bundle);
-        free(ca_bundle);
+        je_free(ca_bundle);
         SSL_CTX_set_verify(self->vars->ssl_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
         h2o_cache_t *ssl_session_cache =
             create_ssl_session_cache(H2O_DEFAULT_PROXY_SSL_SESSION_CACHE_CAPACITY, H2O_DEFAULT_PROXY_SSL_SESSION_CACHE_DURATION);

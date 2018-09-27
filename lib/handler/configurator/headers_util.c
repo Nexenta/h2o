@@ -21,7 +21,7 @@ static int extract_name(const char *src, size_t len, h2o_iovec_t **_name)
 
     if ((name_token = h2o_lookup_token(name.base, name.len)) != NULL) {
         *_name = (h2o_iovec_t *)&name_token->buf;
-        free(name.base);
+        je_free(name.base);
     } else {
         *_name = h2o_mem_alloc(sizeof(**_name));
         **_name = name;
@@ -71,8 +71,8 @@ static int on_config_header_2arg(h2o_configurator_command_t *cmd, h2o_configurat
     }
     if (add_cmd(cmd, node, cmd_id, name, value, headers_cmds) != 0) {
         if (!h2o_iovec_is_token(name))
-            free(name->base);
-        free(value.base);
+            je_free(name->base);
+        je_free(value.base);
         return -1;
     }
     return 0;
@@ -89,7 +89,7 @@ static int on_config_header_unset(h2o_configurator_command_t *cmd, h2o_configura
     }
     if (add_cmd(cmd, node, H2O_HEADERS_CMD_UNSET, name, (h2o_iovec_t){NULL}, self->get_commands(self->child)) != 0) {
         if (!h2o_iovec_is_token(name))
-            free(name->base);
+            je_free(name->base);
         return -1;
     }
     return 0;

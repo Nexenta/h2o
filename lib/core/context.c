@@ -146,8 +146,8 @@ void h2o_context_dispose(h2o_context_t *ctx)
         }
         h2o_context_dispose_pathconf_context(ctx, &hostconf->fallback_path);
     }
-    free(ctx->_pathconfs_inited.entries);
-    free(ctx->_module_configs);
+    je_free(ctx->_pathconfs_inited.entries);
+    je_free(ctx->_module_configs);
     h2o_timeout_dispose(ctx->loop, &ctx->zero_timeout);
     h2o_timeout_dispose(ctx->loop, &ctx->one_sec_timeout);
     h2o_timeout_dispose(ctx->loop, &ctx->hundred_ms_timeout);
@@ -170,7 +170,7 @@ void h2o_context_dispose(h2o_context_t *ctx)
             item->dispose(item->data);
         }
     }
-    free(ctx->storage.entries);
+    je_free(ctx->storage.entries);
 
     /* TODO assert that the all the getaddrinfo threads are idle */
     h2o_multithread_unregister_receiver(ctx->queue, &ctx->receivers.hostinfo_getaddr);
